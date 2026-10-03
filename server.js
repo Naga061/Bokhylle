@@ -3,6 +3,8 @@ const express = require("express");
 const app = express()
 const PORT = 3000;
 
+app.use(express.json())
+
 app.listen(PORT, ()=>{
     console.log(`Server kjører på http://localhost:${PORT}`)
 })
@@ -29,4 +31,13 @@ app.get("/boker/:id", async(req,res) =>{
     const verdi= [bokID]
     const result=  await pool.query(sql,verdi)
     res.json(result.rows)
+
+})
+
+app.post("/boker", async (req,res) => {
+    const {tittel, forfatter, status} = req.body;
+    const nyBOK= "INSERT INTO bokhylle (tittel,forfatter,status) VALUES ($1,$2,$3) RETURNING *"
+    const bokInfo= [tittel,forfatter,status]
+    const nyReg=await pool.query (nyBOK,bokInfo)
+    res.json(nyReg.rows)
 })
