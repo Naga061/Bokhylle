@@ -50,3 +50,12 @@ app.patch("/boker/:id", async(req,res) =>{
     const nyupdate = await pool.query(sqlupdate,nyStatus)
     res.json(nyupdate.rows)
 })
+
+app.delete("/boker/:id", async(req,res) => {
+    const slettbokID = req.params.id
+    const sqlslett= "DELETE FROM bokhylle WHERE bokid= $1 RETURNING *"
+    const slettid = [slettbokID]
+    const sqlsvar= await pool.query(sqlslett,slettid)
+    res.json(sqlsvar.rows)
+
+})
