@@ -41,3 +41,12 @@ app.post("/boker", async (req,res) => {
     const nyReg=await pool.query (nyBOK,bokInfo)
     res.json(nyReg.rows)
 })
+
+app.patch("/boker/:id", async(req,res) =>{
+    const bokinfo= req.params.id
+    const {status}= req.body
+    const sqlupdate = "Update bokhylle set status=$1 WHERE bokid = $2 RETURNING *"
+    const nyStatus = [status,bokinfo]
+    const nyupdate = await pool.query(sqlupdate,nyStatus)
+    res.json(nyupdate.rows)
+})
