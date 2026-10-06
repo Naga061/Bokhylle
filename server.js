@@ -26,12 +26,22 @@ app.get("/boker", async(req,res) =>{
 }) 
 
 app.get("/boker/:id", async(req,res) =>{
+    try{
     const bokID =  req.params.id
     const sql= "SELECT * FROM bokhylle WHERE bokid = $1"
     const verdi= [bokID]
     const result=  await pool.query(sql,verdi)
-    res.json(result.rows)
+   
+     if (result.rows[0] == undefined){
+        res.status(404).json("Finne ingen bok med den id")
+    }
+    else
+    {res.json(result.rows[0])}
+    }
+    catch(error){console.log(error)
+        res.status(500).json("Feilmelding")
 
+    }
 })
 
 app.post("/boker", async (req,res) => {
