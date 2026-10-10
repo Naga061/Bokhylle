@@ -57,8 +57,16 @@ app.post("/boker", async (req,res) => {
     const nyBOK= "INSERT INTO bokhylle (tittel,forfatter,status) VALUES ($1,$2,$3) RETURNING *"
     const bokInfo= [tittel,forfatter,status]
   
-    if(tittel == undefined){
-         res.status(400).json(`Du må fylle inn tittel`)
+    if ((tittel == undefined || tittel=="") && (forfatter == undefined || forfatter == "")){
+         res.status(400).json(`Du må fylle inn tittel og forfatter`)
+    }
+
+    else if(forfatter == undefined || forfatter == ""){
+        res.status(400).json("Du må fylle inn forfatter")
+    }
+
+    else if (tittel == undefined || tittel==""){
+        res.status(400).json("Du må fylle inn tittel")
     }
 
     else
@@ -105,7 +113,7 @@ app.delete("/boker/:id", async(req,res) => {
     {
         res.status(200).json(`${sqlsvar.rows[0].tittel} er slette fra databasen`)
     }
-    res.json(sqlsvar.rows)
+   
     }
     catch(error){console.log(error)
         res.status(500).json("Databasefeil")
